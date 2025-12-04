@@ -1,0 +1,43 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+installdirs/
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Pyright / MyPy
+.mypy_cache/
+
+# Pytest
+.pytest_cache/
+
+# VS Code
+.vscode/
+
+# JetBrains
+.idea/
+
+# macOS
+.DS_Store
+
+# Editor backups
+*~
