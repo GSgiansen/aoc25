@@ -1,0 +1,46 @@
+from collections import Counter
+import heapq
+    
+def comput():
+    with open ('input_small.txt', 'r') as file:
+        l = file.read().splitlines()
+    lines = [list(line) for line in l]
+    
+    m = len(lines)
+    n = len(lines[0])
+    directions = [-1, 0, 1]
+    def check_adj(i, j, visited):
+        if i < 0 or i >= m or j < 0 or j >= n:
+            return 0, visited
+        count = 0
+        for x in directions:
+            for y in directions:
+                if x == y and x == 0:
+                    continue
+                newi, newj = x + i, y + j
+                if newi < 0 or newi >= m or newj < 0 or newj >= n:
+                    continue
+                if lines[newi][newj] == "@":
+                    count += 1
+                    visited.add((newi, newj))
+        return count, visited
+    main_ans = 0
+    # print(lines)
+    while True:
+        ans = 0
+        for i in range(m):
+            for j in range(n):
+                check, visited = check_adj(i, j, set())
+                if check < 4 and lines[i][j] == "@":
+                    ans += 1
+        for tup in visited:
+            lines[tup[0]][tup[1]] = "."
+        # print(ans)
+
+        main_ans += ans
+        if ans == 0:
+            break
+    print(f"ans is {main_ans}")
+                
+if __name__ == "__main__":
+    comput()
