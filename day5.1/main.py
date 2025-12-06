@@ -1,49 +1,35 @@
-from collections import Counter
-import heapq
-    
+from rangetree import RangeTree
 def comput():
-    with open ('input.txt', 'r') as file:
-        l = file.read().splitlines()
-    lines = [list(line) for line in l]
-    
-    m = len(lines)
-    n = len(lines[0])
-    directions = [-1, 0, 1]
-    def check_adj(i, j):
-        if i < 0 or i >= m or j < 0 or j >= n:
-            return 0
-        count = 0
-        for x in directions:
-            for y in directions:
-                if x == y and x == 0:
-                    continue
-                newi, newj = x + i, y + j
-                if newi < 0 or newi >= m or newj < 0 or newj >= n:
-                    continue
-                if lines[newi][newj] == "@":
-                    count += 1
-        return count
-    main_ans = 0
-    # print(lines)
-    while True:
-        ans = 0
-        visited = set()
-        for i in range(m):
-            for j in range(n):
-                check = check_adj(i, j)
-                
-                if check < 4 and lines[i][j] == "@":
-                    # print(visited)
-                    visited.add((i, j))
-                    ans += 1
-        for tup in visited:
-            lines[tup[0]][tup[1]] = "."
-        # print(lines)
+    filepath = 'input.txt'
+    ranges = []
+    ingredients = []
+    with open(filepath, 'r') as f:
+        flag = False
+        for line in f:
+            if line.strip() == "":  # Check if the line is empty after stripping whitespace
+                flag = True
+            elif flag:
+                ingredients.append(line.rstrip('\n'))
+            else:
+                ranges.append(line.rstrip('\n')) # Remove only trailing newline characters
+    ranges = [[int(x.split("-")[0]), int(x.split("-")[1])] for x in ranges]
+    ingredients = [int(x) for x in ingredients]
+    # s = set()
+    ranges.sort()
+    new_ranges = []
+    for s, e in ranges:
+        if not new_ranges or s > new_ranges[-1][-1]:
+            new_ranges.append([s, e])
+        else:
+            new_ranges[-1][-1] = max(e, new_ranges[-1][-1])
+    # print(f"new_ranges {new_ranges}")
+    ans = 0
+    for i in range(len(new_ranges)):
+        start, end = new_ranges[i]
+        ans += end + 1 - start
 
-        main_ans += ans
-        if ans == 0 or not visited:
-            break
-    print(f"ans is {main_ans}")
-                
+    print(f"ans is {ans}")
+            
 if __name__ == "__main__":
+    
     comput()
