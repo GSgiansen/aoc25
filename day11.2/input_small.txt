@@ -1,0 +1,44 @@
+from collections import defaultdict
+from functools import lru_cache
+
+def compute():
+    filepath = "input.txt"
+    adjlst = defaultdict(list)
+
+    # Parse the graph: lines like "svr: a b c"
+    with open(filepath) as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            node, neighbours = line.split(":")
+            node = node.strip()
+            for nxt in neighbours.split():
+                if nxt:
+                    adjlst[node].append(nxt)
+
+    # DP: count paths from 'svr' to 'out' that visit both 'dac' and 'fft'
+    @lru_cache(maxsize=None)
+    def count_paths(node: str, seen_dac: bool, seen_fft: bool) -> int:
+        # Update flags when we arrive at this node
+        if node == "dac":
+            seen_dac = True
+        if node == "fft":
+            seen_fft = True
+
+        # If we reached the end, this path is valid only if we've seen both
+        if node == "out":
+            return 1 if (seen_dac and seen_fft) else 0
+
+        total = 0
+        for nxt in adjlst[node]:
+            total += count_paths(nxt, seen_dac, seen_fft)
+        return total
+
+    ans = count_paths("svr", False, False)
+    print(f"answer is {ans}")
+    return ans
+
+
+if __name__ == "__main__":
+    compute()
